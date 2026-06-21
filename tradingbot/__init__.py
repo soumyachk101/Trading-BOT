@@ -1,0 +1,1 @@
+"""tradingbot package — honest paper-trading engine."""
