@@ -32,24 +32,50 @@ class SMACrossover(BaseStrategy):
         if fast_now is None or slow_now is None or fast_prev is None or slow_prev is None:
             return "HOLD"
 
+        import datetime as dt
+        time_str = dt.datetime.fromtimestamp(current_time, tz=dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+        sentiment = getattr(self, "latest_sentiment", 0.0)
+        signal = "HOLD"
+        reason = f"Fast SMA ({fast_now:.2f}) vs Slow SMA ({slow_now:.2f}). (Sentiment: {sentiment:+.2f})"
+
         # Crossover BUY signal: fast SMA crosses above slow SMA
         if fast_prev <= slow_prev and fast_now > slow_now:
             # Vet with news sentiment if available
-            sentiment = getattr(self, "latest_sentiment", 0.0)
             if sentiment < -0.25:
                 import logging
                 logging.getLogger("honest-bot.strategies.sma").info(
                     f"[{self.name}] BUY signal vetoed due to negative news sentiment: {sentiment:.2f}"
                 )
-                return "HOLD"
-            if not self.position_open:
+                signal = "HOLD"
+                reason = f"SMA Crossover BUY signal vetoed due to negative news sentiment ({sentiment:+.2f} < -0.25)"
+            elif not self.position_open:
                 self.position_open = True
-                return "BUY"
+                signal = "BUY"
+                reason = f"SMA Crossover BUY triggered: Fast SMA ({fast_now:.2f}) crossed above Slow SMA ({slow_now:.2f}) (Sentiment: {sentiment:+.2f})"
+            else:
+                signal = "HOLD"
+                reason = f"SMA Crossover BUY signal generated but position is already open"
 
         # Crossunder SELL signal: fast SMA crosses below slow SMA
         elif fast_prev >= slow_prev and fast_now < slow_now:
             if self.position_open:
                 self.position_open = False
-                return "SELL"
+                signal = "SELL"
+                reason = f"SMA Crossunder SELL triggered: Fast SMA ({fast_now:.2f}) crossed below Slow SMA ({slow_now:.2f}) (Sentiment: {sentiment:+.2f})"
+            else:
+                signal = "HOLD"
+                reason = f"SMA Crossunder SELL signal generated but no active position to close"
 
-        return "HOLD"
+        self.decision_memory.append({
+            "timestamp": time_str,
+            "price": price,
+            "signal": signal,
+            "fast_sma": fast_now,
+            "slow_sma": slow_now,
+            "sentiment": sentiment,
+            "reason": reason
+        })
+        if len(self.decision_memory) > 100:
+            self.decision_memory.pop(0)
+
+        return signal

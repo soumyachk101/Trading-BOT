@@ -130,7 +130,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         /* Tabs Selection Panel */
         .tabs-container {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             background: rgba(22, 27, 34, 0.4);
             border: 1px solid var(--border-color);
             padding: 6px;
@@ -141,9 +141,9 @@ HTML_CONTENT = """<!DOCTYPE html>
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.25s ease;
@@ -155,13 +155,12 @@ HTML_CONTENT = """<!DOCTYPE html>
         }
 
         .tab-btn.active {
-            color: #ffffff;
-            background: rgba(88, 166, 255, 0.15);
-            border: 1px solid rgba(88, 166, 255, 0.25);
-            box-shadow: 0 0 12px rgba(88, 166, 255, 0.1);
+            color: var(--accent-blue);
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid rgba(88, 166, 255, 0.15);
         }
 
-        /* Layout Grid */
+        /* Main content layout */
         main {
             flex: 1;
             padding: 32px 5%;
@@ -196,9 +195,10 @@ HTML_CONTENT = """<!DOCTYPE html>
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 24px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .card:hover {
@@ -206,76 +206,85 @@ HTML_CONTENT = """<!DOCTYPE html>
             box-shadow: 0 8px 32px 0 rgba(88, 166, 255, 0.04);
         }
 
-        .section-title {
-            font-family: var(--font-mono);
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid var(--accent-blue);
-            padding-left: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--accent-blue);
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            opacity: 0.15;
         }
 
-        /* Metrics grid */
+        /* Global Metrics Grid */
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
-            margin-bottom: 24px;
-            grid-column: span 2;
+            margin-bottom: 32px;
         }
 
         .metric-card {
-            background: linear-gradient(135deg, rgba(13, 20, 30, 0.8) 0%, rgba(8, 11, 16, 0.8) 100%);
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 16px;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 3px;
-            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            gap: 8px;
+            backdrop-filter: blur(10px);
         }
 
         .metric-label {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
         }
 
         .metric-value {
             font-family: var(--font-mono);
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             letter-spacing: -0.5px;
         }
 
+        .metric-value.up { color: var(--accent-green); text-shadow: 0 0 10px var(--accent-green-glow); }
+        .metric-value.down { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red-glow); }
+
         .metric-sub {
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
+        }
+        .metric-sub.up { color: var(--accent-green); }
+        .metric-sub.down { color: var(--accent-red); }
+
+        /* Typography & Section Headers */
+        .section-title {
+            font-family: var(--font-mono);
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
         }
 
-        .up { color: var(--accent-green); }
-        .down { color: var(--accent-red); }
+        .section-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background-color: var(--accent-blue);
+            border-radius: 2px;
+        }
 
-        /* Tables */
+        /* Glassmorphic Tables */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -283,93 +292,124 @@ HTML_CONTENT = """<!DOCTYPE html>
             text-align: left;
         }
 
-        th, td {
-            padding: 14px 16px;
-            border-bottom: 1px solid rgba(88, 166, 255, 0.08);
-        }
-
         th {
+            padding: 14px 16px;
             color: var(--text-muted);
             font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
             text-transform: uppercase;
             font-size: 11px;
-            letter-spacing: 0.8px;
-            background: rgba(88, 166, 255, 0.02);
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(88, 166, 255, 0.05);
+            color: var(--text-main);
         }
 
         tr:hover td {
-            background: rgba(88, 166, 255, 0.01);
+            background-color: rgba(255, 255, 255, 0.01);
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .up { color: var(--accent-green) !important; }
+        .down { color: var(--accent-red) !important; }
+
+        /* Badges */
+        .badge-type {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
+        .badge-spot { background: rgba(88, 166, 255, 0.12); color: var(--accent-blue); border: 1px solid rgba(88, 166, 255, 0.2); }
+        .badge-stock { background: rgba(187, 134, 252, 0.12); color: #bb86fc; border: 1px solid rgba(187, 134, 252, 0.2); }
+        .badge-perp { background: rgba(243, 156, 18, 0.12); color: #f39c12; border: 1px solid rgba(243, 156, 18, 0.2); }
+
+        .badge-action {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+        }
+        .badge-buy { background: rgba(63, 185, 80, 0.12); color: var(--accent-green); border: 1px solid rgba(63, 185, 80, 0.2); }
+        .badge-sell { background: rgba(248, 81, 73, 0.12); color: var(--accent-red); border: 1px solid rgba(248, 81, 73, 0.2); }
+        .badge-neutral { background: rgba(139, 148, 158, 0.12); color: var(--text-muted); border: 1px solid rgba(139, 148, 158, 0.2); }
 
         /* Form Controls */
         .form-group {
             margin-bottom: 20px;
         }
 
-        .form-group label {
+        label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-muted);
             margin-bottom: 8px;
-            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .form-control, select {
+        .form-control {
             width: 100%;
-            background: rgba(8, 11, 16, 0.6);
+            background: rgba(8, 11, 16, 0.5);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 10px 14px;
+            padding: 12px 16px;
             color: var(--text-main);
             font-family: var(--font-main);
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: border-color 0.2s;
         }
 
-        .form-control:focus, select:focus {
-            border-color: var(--accent-blue);
+        .form-control:focus {
             outline: none;
-            box-shadow: 0 0 10px rgba(88, 166, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px var(--accent-glow);
         }
 
-        /* Order Form specific styles */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position-x: calc(100% - 12px);
+            background-position-y: 10px;
+        }
+
         .side-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
         .side-btn {
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            background: transparent;
             padding: 12px;
+            border-radius: 8px;
+            text-align: center;
             font-weight: 700;
             cursor: pointer;
-            text-align: center;
-            background: rgba(8, 11, 16, 0.4);
+            transition: all 0.2s;
             color: var(--text-muted);
-            transition: all 0.25s ease;
+            font-family: var(--font-mono);
+            font-size: 13px;
         }
 
         .side-btn.active.buy {
-            background: var(--accent-green-glow);
-            color: var(--accent-green);
+            background: rgba(63, 185, 80, 0.1);
             border-color: var(--accent-green);
-            box-shadow: 0 0 12px rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
         }
 
         .side-btn.active.sell {
-            background: var(--accent-red-glow);
-            color: var(--accent-red);
+            background: rgba(248, 81, 73, 0.1);
             border-color: var(--accent-red);
-            box-shadow: 0 0 12px rgba(248, 81, 73, 0.15);
+            color: var(--accent-red);
         }
 
         .btn-submit {
@@ -377,47 +417,44 @@ HTML_CONTENT = """<!DOCTYPE html>
             padding: 14px;
             border-radius: 8px;
             border: none;
-            font-family: var(--font-mono);
             font-weight: 700;
-            font-size: 15px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
         }
 
         .btn-submit.buy {
             background: var(--accent-green);
             color: #ffffff;
+            box-shadow: 0 4px 14px var(--accent-green-glow);
         }
+        .btn-submit.buy:hover { background: #34aa46; }
 
         .btn-submit.sell {
             background: var(--accent-red);
             color: #ffffff;
+            box-shadow: 0 4px 14px var(--accent-red-glow);
         }
+        .btn-submit.sell:hover { background: #e54039; }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        /* Toggle Switches */
+        /* Switches */
         .toggle-container {
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             padding: 16px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.01);
-            border: 1px solid rgba(88, 166, 255, 0.05);
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
         }
 
         .switch {
             position: relative;
             display: inline-block;
             width: 48px;
-            height: 24px;
+            height: 26px;
         }
 
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -426,18 +463,20 @@ HTML_CONTENT = """<!DOCTYPE html>
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255,255,255,0.1);
+            background-color: #21262d;
             transition: .4s;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 34px;
+            border: 1px solid var(--border-color);
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 16px; width: 16px;
-            left: 3px; bottom: 3px;
-            background-color: white;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-muted);
             transition: .4s;
             border-radius: 50%;
         }
@@ -447,31 +486,11 @@ HTML_CONTENT = """<!DOCTYPE html>
         }
 
         input:checked + .slider:before {
-            transform: translateX(24px);
+            transform: translateX(22px);
+            background-color: #ffffff;
         }
 
-        /* Badges */
-        .badge-type {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .badge-spot { background-color: rgba(88, 166, 255, 0.12); color: var(--accent-blue); }
-        .badge-stock { background-color: rgba(255, 191, 0, 0.12); color: #ffbf00; }
-        .badge-perp { background-color: rgba(187, 134, 252, 0.12); color: #bb86fc; }
-
-        .badge-action {
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-size: 11px;
-        }
-        .badge-buy { background-color: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
-        .badge-sell { background-color: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
-
-        /* Search input & CSV Button */
+        /* Ledger and filters */
         .ledger-toolbar {
             display: flex;
             justify-content: space-between;
@@ -479,46 +498,6 @@ HTML_CONTENT = """<!DOCTYPE html>
             margin-bottom: 20px;
         }
 
-        .btn-action {
-            background: rgba(88, 166, 255, 0.1);
-            border: 1px solid var(--border-color);
-            color: var(--accent-blue);
-            border-radius: 8px;
-            padding: 10px 18px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-action:hover {
-            background: rgba(88, 166, 255, 0.18);
-            border-color: var(--accent-blue);
-        }
-
-        .chart-container {
-            height: 320px;
-            position: relative;
-        }
-
-        .no-data {
-            color: var(--text-muted);
-            text-align: center;
-            padding: 40px 0;
-            font-style: italic;
-        }
-
-        /* Sliders */
-        .range-value {
-            font-family: var(--font-mono);
-            font-weight: 700;
-            color: var(--accent-blue);
-        }
-
-        /* News Sentiment Badge Styles */
         .badge-sentiment {
             padding: 2px 8px;
             border-radius: 4px;
@@ -545,12 +524,12 @@ HTML_CONTENT = """<!DOCTYPE html>
             border: 1px solid rgba(139, 148, 158, 0.3);
         }
         .news-item {
-            padding: 10px;
+            padding: 14px;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
+            border-radius: 12px;
             transition: all 0.2s ease;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         .news-item:hover {
             background: rgba(255, 255, 255, 0.05);
@@ -570,6 +549,70 @@ HTML_CONTENT = """<!DOCTYPE html>
             font-size: 11px;
             color: var(--text-muted);
         }
+
+        /* AI Brain weights styling */
+        .weight-bar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .weight-label {
+            width: 120px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+        .weight-progress-bg {
+            flex: 1;
+            height: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .weight-progress-fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.35s ease;
+        }
+        .weight-progress-fill.positive {
+            background: linear-gradient(90deg, rgba(63,185,80,0.4), var(--accent-green));
+            box-shadow: 0 0 8px rgba(63, 185, 80, 0.4);
+        }
+        .weight-progress-fill.negative {
+            background: linear-gradient(90deg, rgba(248,81,73,0.4), var(--accent-red));
+            box-shadow: 0 0 8px rgba(248, 81, 73, 0.4);
+        }
+        .weight-value {
+            margin-left: 12px;
+            width: 70px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            text-align: right;
+        }
+
+        /* Keyword Highlights */
+        .keyword-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            margin: 2px;
+        }
+        .keyword-positive {
+            background: rgba(63, 185, 80, 0.12);
+            color: #56d364;
+            border: 1px solid rgba(63, 185, 80, 0.25);
+        }
+        .keyword-negative {
+            background: rgba(248, 81, 73, 0.12);
+            color: #ff7b72;
+            border: 1px solid rgba(248, 81, 73, 0.25);
+        }
     </style>
 </head>
 <body>
@@ -582,6 +625,9 @@ HTML_CONTENT = """<!DOCTYPE html>
 
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('dashboard-tab')">Dashboard</button>
+            <button class="tab-btn" onclick="switchTab('news-tab')">Market Intelligence</button>
+            <button class="tab-btn" onclick="switchTab('learning-tab')">AI Brain</button>
+            <button class="tab-btn" onclick="switchTab('memory-tab')">System Memory</button>
             <button class="tab-btn" onclick="switchTab('trader-tab')">Manual Trader</button>
             <button class="tab-btn" onclick="switchTab('settings-tab')">Risk Settings</button>
             <button class="tab-btn" onclick="switchTab('ledger-tab')">Audit Ledger</button>
@@ -625,7 +671,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div style="display: flex; flex-direction: column; gap: 24px;">
                 <div class="card">
                     <h2 class="section-title">Equity performance</h2>
-                    <div class="chart-container">
+                    <div class="chart-container" style="height: 320px; position: relative;">
                         <canvas id="equityChart"></canvas>
                     </div>
                 </div>
@@ -657,7 +703,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div style="display: flex; flex-direction: column; gap: 24px;">
                 <div class="card">
                     <h2 class="section-title">Live tickers</h2>
-                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <div id="tickers-container" style="display: flex; flex-direction: column; gap: 14px;">
                         <div style="display: flex; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); border-radius: 8px;">
                             <span style="font-weight:600; color:var(--text-muted);">BTCUSDT Spot</span>
                             <span id="obs-btc-spot" style="color:var(--accent-blue); font-family:var(--font-mono); font-weight:700;">Loading...</span>
@@ -696,6 +742,117 @@ HTML_CONTENT = """<!DOCTYPE html>
             </div>
         </div>
 
+        <!-- 1B. MARKET INTELLIGENCE TAB -->
+        <div id="news-tab" class="tab-content">
+            <div class="card" style="grid-column: span 2;">
+                <div class="ledger-toolbar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 16px;">
+                    <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
+                        <input type="text" id="news-search" class="form-control" placeholder="Search news headlines..." style="max-width:300px;" oninput="filterNews()">
+                        <select id="news-asset-filter" class="form-control" style="max-width: 150px; background: #0d141e; border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 8px;" onchange="filterNews()">
+                            <option value="ALL">All Assets</option>
+                            <option value="BTC">BTC Crypto</option>
+                            <option value="AAPL">AAPL Stock</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 16px; font-size: 13px; color: var(--text-muted);">
+                        <span>Total Articles: <strong id="news-total-count" style="color:var(--text-main)">0</strong></span>
+                        <span>Avg Sentiment: <strong id="news-avg-sentiment" style="color:var(--accent-blue)">+0.00</strong></span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+                    <div id="news-list-container" style="display: flex; flex-direction: column; gap: 16px; max-height: 600px; overflow-y: auto; padding-right: 8px;">
+                        <div class="no-data">No news articles found matching filter criteria.</div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="card" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); margin: 0; padding: 16px;">
+                            <h3 style="font-size:14px; margin-bottom:12px; color:var(--text-main);">Sentiment Keyword Frequency</h3>
+                            <div id="news-keywords-frequency" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                <div class="no-data" style="font-size:12px;">No keywords analyzed yet.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); margin: 0; padding: 16px; font-size: 13px; line-height: 1.6;">
+                            <h3 style="font-size:14px; margin-bottom:12px; color:var(--text-main);">How it works</h3>
+                            <p style="margin-bottom: 8px; color: var(--text-muted);">Yahoo Finance Search feeds are parsed, clean tokens are matched against our sentiment lexicon engine, and an average score is computed dynamically.</p>
+                            <p style="color: var(--text-muted);"><strong style="color:var(--accent-red)">Veto Limit:</strong> An average sentiment score below -0.25 will block any BUY signals generated by active strategies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1C. AI BRAIN (LEARNING) TAB -->
+        <div id="learning-tab" class="tab-content">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2 class="section-title" style="margin:0;">Active model weights</h2>
+                    <select id="learning-strat-select" class="form-control" style="max-width:250px; background: #0d141e; border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 8px;" onchange="renderLearningTab()">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+                
+                <div id="weights-visualizer-container" style="display:flex; flex-direction:column; gap:16px;">
+                    <div class="no-data">No active ML strategies loaded. Select a strategy above or check engine setup.</div>
+                </div>
+            </div>
+            
+            <div class="card" style="display:flex; flex-direction:column; gap:20px;">
+                <h2 class="section-title">Weights adaptation history</h2>
+                <div style="overflow-y:auto; max-height:450px;">
+                    <table id="weights-history-table">
+                        <thead>
+                            <tr>
+                                <th>Step</th>
+                                <th>Timestamp</th>
+                                <th>Realized PnL</th>
+                                <th>Bias Delta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="weights-history-body">
+                            <tr>
+                                <td colspan="4" class="no-data">No weights updates registered yet. Feedback loop triggers on position closes.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1D. SYSTEM MEMORY (LOGS) TAB -->
+        <div id="memory-tab" class="tab-content single-col">
+            <div class="card">
+                <div class="ledger-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:16px;">
+                    <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
+                        <input type="text" id="memory-search" class="form-control" placeholder="Search cognitive log messages..." style="max-width:300px;" oninput="filterMemory()">
+                        <select id="memory-strat-select" class="form-control" style="max-width: 250px; background: #0d141e; border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; padding: 8px;" onchange="filterMemory()">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="memory-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Signal</th>
+                                <th>Asset Price</th>
+                                <th>Sentiment</th>
+                                <th>Justification Rationale</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memory-body">
+                            <tr>
+                                <td colspan="5" class="no-data">No strategy decisions logged in memory yet. Waiting for ticks...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- 2. MANUAL TRADER TAB -->
         <div id="trader-tab" class="tab-content">
             <div class="card">
@@ -708,7 +865,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
                 <div class="form-group">
                     <label for="order-asset-type">Asset Class</label>
-                    <select id="order-asset-type" onchange="adjustAssetForm()">
+                    <select id="order-asset-type" class="form-control" onchange="adjustAssetForm()">
                         <option value="SPOT">SPOT (Crypto)</option>
                         <option value="STOCK">STOCK (Alpaca)</option>
                         <option value="PERP">PERP FUTURES (Binance)</option>
@@ -717,7 +874,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
                 <div class="form-group">
                     <label for="order-symbol">Symbol</label>
-                    <select id="order-symbol">
+                    <select id="order-symbol" class="form-control">
                         <!-- Populated dynamically based on asset type -->
                     </select>
                 </div>
@@ -760,7 +917,7 @@ HTML_CONTENT = """<!DOCTYPE html>
                     <input type="number" id="config-slippage" class="form-control" min="0" max="50" step="1" value="2">
                 </div>
 
-                <button class="btn-action" onclick="saveRiskConfig()" style="width:100%; justify-content:center; padding:12px;">Save Configurations</button>
+                <button class="btn-submit" onclick="saveRiskConfig()" style="width:100%; justify-content:center; padding:12px; background:var(--accent-blue); border:none; color:white;">Save Configurations</button>
             </div>
 
             <div class="card" style="display:flex; flex-direction:column; gap:20px;">
@@ -777,7 +934,7 @@ HTML_CONTENT = """<!DOCTYPE html>
                     </label>
                 </div>
 
-                <button class="btn-action" onclick="resetSafetyDrawdown()" style="width:100%; justify-content:center; color:var(--accent-red); border-color:rgba(248, 81, 73, 0.2); background:rgba(248,81,73,0.05);">Reset Drawdown safety lock</button>
+                <button class="btn-submit" onclick="resetSafetyDrawdown()" style="width:100%; justify-content:center; color:var(--accent-red); background:rgba(248,81,73,0.05); border:1px solid rgba(248,81,73,0.2);">Reset Drawdown safety lock</button>
             </div>
         </div>
 
@@ -786,8 +943,7 @@ HTML_CONTENT = """<!DOCTYPE html>
             <div class="card">
                 <div class="ledger-toolbar">
                     <input type="text" id="ledger-search" class="form-control" placeholder="Search symbol or action..." style="max-width:300px;" oninput="filterLedger()">
-                    <button class="btn-action" onclick="downloadLedgerCSV()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <button class="btn-submit" onclick="downloadLedgerCSV()" style="width:auto; padding:10px 18px; background:rgba(88, 166, 255, 0.1); color:var(--accent-blue); border:1px solid var(--border-color);">
                         Export CSV Ledger
                     </button>
                 </div>
@@ -823,13 +979,36 @@ HTML_CONTENT = """<!DOCTYPE html>
         let labelHistory = ['Init'];
         let activeSide = 'BUY';
         let fullLedger = [];
+        let strategiesData = {};
+        let newsData = [];
+
+        const positiveKeywords = ["upgrade", "bullish", "profit", "profits", "gain", "gains", "rise", "grow", "growth", "buy", "beat", "success", "successful", "high", "positive", "partnership", "surpass", "exceed", "exceeds", "record", "expansion", "breakthrough", "rally", "optimism", "acquire"];
+        const negativeKeywords = ["downgrade", "bearish", "loss", "losses", "crash", "fall", "decline", "declines", "scam", "lawsuit", "deficit", "selloff", "negative", "warn", "warning", "drop", "drops", "plunge", "shrink", "investigation", "fine", "debt", "fear", "hack", "risk"];
+
+        function getKeywordTags(text) {
+            const words = text.toLowerCase().match(/\b[a-z]+\b/g) || [];
+            let tagsHtml = '';
+            const seen = new Set();
+            
+            words.forEach(w => {
+                if (seen.has(w)) return;
+                if (positiveKeywords.includes(w)) {
+                    tagsHtml += `<span class="keyword-tag keyword-positive">${w}</span>`;
+                    seen.add(w);
+                } else if (negativeKeywords.includes(w)) {
+                    tagsHtml += `<span class="keyword-tag keyword-negative">${w}</span>`;
+                    seen.add(w);
+                }
+            });
+            return tagsHtml;
+        }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
             // Find tab button that matches click
-            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.innerText === event.target.innerText);
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
             if (activeBtn) activeBtn.classList.add('active');
             
             document.getElementById(tabId).classList.add('active');
@@ -907,6 +1086,10 @@ HTML_CONTENT = """<!DOCTYPE html>
                 const data = await response.json();
 
                 fullLedger = data.ledger;
+                strategiesData = data.strategies || {};
+                newsData = data.news || [];
+
+                populateStrategySelects();
 
                 // 1. Update valuation & metrics
                 const portfolioVal = data.portfolio_value;
@@ -990,6 +1173,18 @@ HTML_CONTENT = """<!DOCTYPE html>
                 // 3. Render ledger logs
                 renderLedgerTable(data.ledger);
 
+                // Update Tickers sidebar News Card
+                updateSidebarNews(data.news);
+
+                // Update tabs news data
+                updateNewsList();
+
+                // Render active learning tab info
+                renderLearningTab();
+
+                // Render cognitive memory logs
+                updateMemoryTable();
+
                 // Update Chart Data
                 let currentHist = 10000.0;
                 const histVals = [10000.0];
@@ -1007,42 +1202,6 @@ HTML_CONTENT = """<!DOCTYPE html>
                     histLabels.push('Live');
                 }
 
-                // Update News HUD
-                const newsContainer = document.getElementById('news-hud-container');
-                if (data.news && data.news.length > 0) {
-                    let newsHtml = '';
-                    data.news.forEach(item => {
-                        const score = item.sentiment_score || 0.0;
-                        const label = item.sentiment_label || 'Neutral';
-                        let badgeClass = 'sentiment-neutral';
-                        if (label === 'Positive') badgeClass = 'sentiment-positive';
-                        else if (label === 'Negative') badgeClass = 'sentiment-negative';
-                        
-                        const timeStr = item.published_utc ? item.published_utc.substring(11, 16) : '';
-                        const queryBadge = `<span style="font-family:var(--font-mono); color:var(--accent-blue); font-size:10px; font-weight:700; margin-right:6px;">[${item.asset_query}]</span>`;
-                        
-                        newsHtml += `
-                        <div class="news-item">
-                            <div class="news-title">
-                                <a href="${item.link}" target="_blank" style="color:inherit; text-decoration:none;">${item.title}</a>
-                            </div>
-                            <div class="news-meta">
-                                <div>
-                                    ${queryBadge}
-                                    <span>${item.publisher}</span>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span>${timeStr}</span>
-                                    <span class="badge-sentiment ${badgeClass}" title="Score: ${score.toFixed(2)}">${label}</span>
-                                </div>
-                            </div>
-                        </div>`;
-                    });
-                    newsContainer.innerHTML = newsHtml;
-                } else {
-                    newsContainer.innerHTML = `<div class="no-data">No news updates available.</div>`;
-                }
-
                 if (chartInstance) {
                     chartInstance.data.labels = histLabels;
                     chartInstance.data.datasets[0].data = histVals;
@@ -1052,6 +1211,286 @@ HTML_CONTENT = """<!DOCTYPE html>
             } catch (err) {
                 console.error("Dashboard update error:", err);
             }
+        }
+
+        function populateStrategySelects() {
+            const learningSelect = document.getElementById('learning-strat-select');
+            const memorySelect = document.getElementById('memory-strat-select');
+            
+            const prevLearningVal = learningSelect.value;
+            const prevMemoryVal = memorySelect.value;
+            
+            let hasML = false;
+            let optionsHtml = '';
+            let memoryOptionsHtml = '<option value="ALL">All Strategies</option>';
+            
+            for (const [sym, strat] of Object.entries(strategiesData)) {
+                memoryOptionsHtml += `<option value="${sym}">${sym} (${strat.name})</option>`;
+                if (strat.weights) {
+                    hasML = true;
+                    optionsHtml += `<option value="${sym}">${sym} (${strat.name})</option>`;
+                }
+            }
+            
+            const currentOptionCount = learningSelect.options.length;
+            if (currentOptionCount === 0 || (hasML && learningSelect.querySelector('option') === null)) {
+                learningSelect.innerHTML = optionsHtml || '<option value="">No AI strategies active</option>';
+                memorySelect.innerHTML = memoryOptionsHtml;
+                
+                if (prevLearningVal && Array.from(learningSelect.options).some(o => o.value === prevLearningVal)) {
+                    learningSelect.value = prevLearningVal;
+                }
+                if (prevMemoryVal && Array.from(memorySelect.options).some(o => o.value === prevMemoryVal)) {
+                    memorySelect.value = prevMemoryVal;
+                }
+            }
+        }
+
+        function updateSidebarNews(news) {
+            const newsContainer = document.getElementById('news-hud-container');
+            if (news && news.length > 0) {
+                let newsHtml = '';
+                news.slice(0, 8).forEach(item => {
+                    const label = item.sentiment_label || 'Neutral';
+                    let badgeClass = 'sentiment-neutral';
+                    if (label === 'Positive') badgeClass = 'sentiment-positive';
+                    else if (label === 'Negative') badgeClass = 'sentiment-negative';
+                    
+                    const timeStr = item.published_utc ? item.published_utc.substring(11, 16) : '';
+                    const queryBadge = `<span style="font-family:var(--font-mono); color:var(--accent-blue); font-size:10px; font-weight:700; margin-right:6px;">[${item.asset_query}]</span>`;
+                    
+                    newsHtml += `
+                    <div class="news-item" style="padding: 10px; margin-bottom: 8px; border-radius: 8px;">
+                        <div class="news-title">
+                            <a href="${item.link}" target="_blank" style="color:inherit; text-decoration:none;">${item.title}</a>
+                        </div>
+                        <div class="news-meta">
+                            <div>
+                                ${queryBadge}
+                                <span>${item.publisher}</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span>${timeStr}</span>
+                                <span class="badge-sentiment ${badgeClass}">${label}</span>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                newsContainer.innerHTML = newsHtml;
+            } else {
+                newsContainer.innerHTML = `<div class="no-data">No news updates available.</div>`;
+            }
+        }
+
+        function updateNewsList() {
+            const query = document.getElementById('news-search').value.toLowerCase();
+            const assetFilter = document.getElementById('news-asset-filter').value;
+            
+            const filtered = newsData.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(query) || item.publisher.toLowerCase().includes(query);
+                const matchesAsset = (assetFilter === 'ALL' || item.asset_query === assetFilter);
+                return matchesSearch && matchesAsset;
+            });
+            
+            document.getElementById('news-total-count').innerText = filtered.length;
+            
+            let totalScore = 0;
+            filtered.forEach(item => totalScore += (item.sentiment_score || 0.0));
+            const avgSentiment = filtered.length > 0 ? (totalScore / filtered.length) : 0.0;
+            const avgEl = document.getElementById('news-avg-sentiment');
+            avgEl.innerText = (avgSentiment >= 0 ? '+' : '') + avgSentiment.toFixed(2);
+            avgEl.className = avgSentiment > 0.15 ? 'up' : (avgSentiment < -0.15 ? 'down' : '');
+            
+            const listContainer = document.getElementById('news-list-container');
+            let listHtml = '';
+            
+            if (filtered.length > 0) {
+                filtered.forEach(item => {
+                    const score = item.sentiment_score || 0.0;
+                    const label = item.sentiment_label || 'Neutral';
+                    let badgeClass = 'sentiment-neutral';
+                    if (label === 'Positive') badgeClass = 'sentiment-positive';
+                    else if (label === 'Negative') badgeClass = 'sentiment-negative';
+                    
+                    const timeStr = item.published_utc ? item.published_utc.replace('T', ' ').substring(0, 19) : '';
+                    const tags = getKeywordTags(item.title);
+                    
+                    listHtml += `
+                    <div class="news-item">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px;">
+                            <div class="news-title" style="margin:0; font-size:14px; font-weight:600;">
+                                <a href="${item.link}" target="_blank" style="color:var(--text-main); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--accent-blue)'" onmouseout="this.style.color='var(--text-main)'">${item.title}</a>
+                            </div>
+                            <span class="badge-sentiment ${badgeClass}" title="Score: ${score.toFixed(2)}">${label}</span>
+                        </div>
+                        <div style="margin-bottom:8px;">${tags}</div>
+                        <div class="news-meta">
+                            <span><strong style="color:var(--accent-blue)">[${item.asset_query}]</strong> ${item.publisher}</span>
+                            <span>${timeStr}</span>
+                        </div>
+                    </div>`;
+                });
+                listContainer.innerHTML = listHtml;
+            } else {
+                listContainer.innerHTML = `<div class="no-data">No news articles match the current filter.</div>`;
+            }
+            
+            updateKeywordFrequencies(filtered);
+        }
+
+        function updateKeywordFrequencies(articles) {
+            const counts = {};
+            articles.forEach(item => {
+                const words = item.title.toLowerCase().match(/\b[a-z]+\b/g) || [];
+                words.forEach(w => {
+                    if (positiveKeywords.includes(w) || negativeKeywords.includes(w)) {
+                        counts[w] = (counts[w] || 0) + 1;
+                    }
+                });
+            });
+            
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+            const freqContainer = document.getElementById('news-keywords-frequency');
+            
+            let freqHtml = '';
+            if (sorted.length > 0) {
+                sorted.forEach(([word, count]) => {
+                    const isPos = positiveKeywords.includes(word);
+                    const labelClass = isPos ? 'keyword-positive' : 'keyword-negative';
+                    freqHtml += `<span class="keyword-tag ${labelClass}">${word} (${count})</span>`;
+                });
+                freqContainer.innerHTML = freqHtml;
+            } else {
+                freqContainer.innerHTML = `<div class="no-data" style="font-size:12px;">No keywords analyzed yet.</div>`;
+            }
+        }
+
+        function filterNews() {
+            updateNewsList();
+        }
+
+        function renderLearningTab() {
+            const select = document.getElementById('learning-strat-select');
+            const sym = select.value;
+            
+            const container = document.getElementById('weights-visualizer-container');
+            const historyBody = document.getElementById('weights-history-body');
+            
+            if (!sym || !strategiesData[sym] || !strategiesData[sym].weights) {
+                container.innerHTML = `<div class="no-data">No active ML strategies loaded. Select a strategy above or check engine setup.</div>`;
+                historyBody.innerHTML = `<tr><td colspan="4" class="no-data">No weights updates registered yet. Feedback loop triggers on position closes.</td></tr>`;
+                return;
+            }
+            
+            const strat = strategiesData[sym];
+            const weights = strat.weights;
+            const lookback = strat.lookback || (weights.length - 1);
+            
+            let weightsHtml = `
+            <div style="font-size:14px; margin-bottom:16px;">
+                Strategy: <strong>${strat.name}</strong> | Type: <code>${strat.class}</code>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:16px;">`;
+            
+            const bias = weights[0];
+            const maxWeightVal = Math.max(...weights.map(Math.abs)) || 1.0;
+            
+            const getProgressFill = (val) => {
+                const pct = Math.min(100, (Math.abs(val) / maxWeightVal) * 100);
+                const colorClass = val >= 0 ? 'positive' : 'negative';
+                return `<div class="weight-progress-bg">
+                    <div class="weight-progress-fill ${colorClass}" style="width: ${pct}%"></div>
+                </div>`;
+            };
+            
+            weightsHtml += `
+            <div class="weight-bar-container">
+                <span class="weight-label">Bias (Offset)</span>
+                ${getProgressFill(bias)}
+                <span class="weight-value" style="color: ${bias >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${bias.toFixed(4)}</span>
+            </div>`;
+            
+            for (let i = 1; i <= lookback; i++) {
+                const w = weights[i];
+                weightsHtml += `
+                <div class="weight-bar-container">
+                    <span class="weight-label">Return t-${i}</span>
+                    ${getProgressFill(w)}
+                    <span class="weight-value" style="color: ${w >= 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">${w.toFixed(4)}</span>
+                </div>`;
+            }
+            weightsHtml += `</div>`;
+            container.innerHTML = weightsHtml;
+            
+            const history = strat.weights_history || [];
+            if (history.length > 0) {
+                let histHtml = '';
+                const reversedHist = [...history].reverse();
+                reversedHist.forEach((step, idx) => {
+                    const stepNum = step.step || (reversedHist.length - idx);
+                    const pnlVal = step.pnl_pct * 100;
+                    const biasDelta = step.bias_delta || 0.0;
+                    histHtml += `<tr>
+                        <td style="font-family:var(--font-mono); font-weight:700;">#${stepNum}</td>
+                        <td style="color:var(--text-muted);">${step.timestamp || ''}</td>
+                        <td class="${pnlVal >= 0 ? 'up' : 'down'}" style="font-weight:700;">${pnlVal >= 0 ? '+' : ''}${pnlVal.toFixed(2)}%</td>
+                        <td class="${biasDelta >= 0 ? 'up' : 'down'}" style="font-family:var(--font-mono); font-weight:600;">${biasDelta >= 0 ? '+' : ''}${biasDelta.toFixed(4)}</td>
+                    </tr>`;
+                });
+                historyBody.innerHTML = histHtml;
+            } else {
+                historyBody.innerHTML = `<tr><td colspan="4" class="no-data">No weights updates registered yet. Feedback loop triggers on position closes.</td></tr>`;
+            }
+        }
+
+        function updateMemoryTable() {
+            const search = document.getElementById('memory-search').value.toLowerCase();
+            const select = document.getElementById('memory-strat-select').value;
+            
+            const memoryBody = document.getElementById('memory-body');
+            let logs = [];
+            
+            for (const [sym, strat] of Object.entries(strategiesData)) {
+                if (select === 'ALL' || select === sym) {
+                    const entries = (strat.decision_memory || []).map(entry => ({
+                        ...entry,
+                        strategy: sym
+                    }));
+                    logs.push(...entries);
+                }
+            }
+            
+            logs.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+            
+            const filtered = logs.filter(log => {
+                return log.reason.toLowerCase().includes(search) || 
+                       log.signal.toLowerCase().includes(search) || 
+                       log.strategy.toLowerCase().includes(search);
+            });
+            
+            if (filtered.length > 0) {
+                let logsHtml = '';
+                filtered.forEach(log => {
+                    const signalClass = log.signal === 'BUY' ? 'badge-buy' : (log.signal === 'SELL' ? 'badge-sell' : 'badge-neutral');
+                    const sentimentVal = log.sentiment || 0.0;
+                    const sentClass = sentimentVal > 0.15 ? 'up' : (sentimentVal < -0.15 ? 'down' : '');
+                    
+                    logsHtml += `<tr>
+                        <td style="color:var(--text-muted); font-size:12px;">${log.timestamp.substring(11, 19)}</td>
+                        <td><span class="badge-action ${signalClass}">${log.signal}</span> <span style="font-size:10px; color:var(--text-muted)">[${log.strategy}]</span></td>
+                        <td style="font-family:var(--font-mono); font-weight:700;">$${log.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                        <td class="${sentClass}" style="font-family:var(--font-mono); font-weight:700;">${sentimentVal >= 0 ? '+' : ''}${sentimentVal.toFixed(2)}</td>
+                        <td style="font-size:13px; line-height:1.4; color:var(--text-muted);">${log.reason}</td>
+                    </tr>`;
+                });
+                memoryBody.innerHTML = logsHtml;
+            } else {
+                memoryBody.innerHTML = `<tr><td colspan="5" class="no-data">No strategy decisions match the current filter.</td></tr>`;
+            }
+        }
+        
+        function filterMemory() {
+            updateMemoryTable();
         }
 
         function renderLedgerTable(ledger) {
@@ -1072,7 +1511,7 @@ HTML_CONTENT = """<!DOCTYPE html>
                         <td>${tx.qty.toFixed(6)}</td>
                         <td>$${tx.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
                         <td>$${tx.fee_usd.toFixed(4)}</td>
-                        <td class="audit-hash" data-full-hash="${fullHash}" onclick="alert('Full Hash: ' + this.getAttribute('data-full-hash'))">${shortHash}</td>
+                        <td class="audit-hash" style="cursor:pointer;" data-full-hash="${fullHash}" onclick="alert('Full Hash: ' + this.getAttribute('data-full-hash'))">${shortHash}</td>
                     </tr>`;
                 });
                 ledgerBody.innerHTML = ledgerHtml;
@@ -1239,6 +1678,8 @@ HTML_CONTENT = """<!DOCTYPE html>
 class DashboardServer(http.server.BaseHTTPRequestHandler):
     engine_ref: HonestEngine | None = None
     prices_callback: Callable[[], Dict[str, float]] | None = None
+    strategies_ref: dict | None = None
+    news_cache: list = []
 
     def log_message(self, format, *args):
         return
@@ -1257,6 +1698,20 @@ class DashboardServer(http.server.BaseHTTPRequestHandler):
             engine = DashboardServer.engine_ref
             portfolio_val = engine.get_portfolio_value(current_prices) if engine else 10000.0
 
+            strategies_data = {}
+            if DashboardServer.strategies_ref:
+                for sym, strat in DashboardServer.strategies_ref.items():
+                    strat_info = {
+                        "name": strat.name,
+                        "class": strat.__class__.__name__,
+                        "decision_memory": getattr(strat, "decision_memory", []),
+                    }
+                    if hasattr(strat, "model"):
+                        strat_info["weights"] = strat.model.weights
+                        strat_info["lookback"] = strat.model.lookback
+                        strat_info["weights_history"] = getattr(strat.model, "weights_history", [])
+                    strategies_data[sym] = strat_info
+
             data = {
                 "cash": engine.cash if engine else 10000.0,
                 "portfolio_value": portfolio_val,
@@ -1269,6 +1724,7 @@ class DashboardServer(http.server.BaseHTTPRequestHandler):
                 "slippage_bps": engine.slippage_bps if engine else 2.0,
                 "live_trading": config.LIVE_TRADING,
                 "news": getattr(DashboardServer, "news_cache", []),
+                "strategies": strategies_data
             }
             self.wfile.write(json.dumps(data).encode("utf-8"))
 
@@ -1389,11 +1845,15 @@ def news_poll_loop():
 
 
 def start_dashboard(
-    engine: HonestEngine, prices_callback: Callable[[], Dict[str, float]], port: int = 8000
+    engine: HonestEngine,
+    prices_callback: Callable[[], Dict[str, float]],
+    strategies: dict | None = None,
+    port: int = 8000
 ) -> threading.Thread:
     """Start the dashboard server in a background thread."""
     DashboardServer.engine_ref = engine
     DashboardServer.prices_callback = prices_callback
+    DashboardServer.strategies_ref = strategies
 
     # Start news thread
     t_news = threading.Thread(target=news_poll_loop, daemon=True)

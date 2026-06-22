@@ -18,6 +18,7 @@ class LogisticRegressionModel:
         self.train_window = train_window
         self.weights = [0.0] * (lookback + 1)  # weights + bias
         self.trained = False
+        self.weights_history: list[dict] = []
 
     def _sigmoid(self, z: float) -> float:
         z = max(-50.0, min(50.0, z))
@@ -69,18 +70,28 @@ class LogisticRegressionModel:
         """Online Feedback: Adjust weights dynamically based on closed-trade PnL."""
         if len(X_entry) != self.lookback:
             return
-
+ 
         learning_rate = 0.05
         # Feedback multiplier: positive reinforcement for profit, negative for loss
         direction = 1.0 if pnl_pct >= 0.0 else -1.0
         magnitude = min(1.5, abs(pnl_pct) * 10.0)  # scale updates by PnL size
-
+ 
         old_weights = list(self.weights)
-
+ 
         # Apply online SGD step adjustment
         self.weights[0] += learning_rate * direction * magnitude * 1.0  # bias
         for j in range(self.lookback):
             self.weights[j + 1] += learning_rate * direction * magnitude * X_entry[j]
+ 
+        import datetime as dt
+        self.weights_history.append({
+            "timestamp": dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "pnl_pct": pnl_pct,
+            "weights": list(self.weights),
+            "bias_delta": self.weights[0] - old_weights[0]
+        })
+        if len(self.weights_history) > 100:
+            self.weights_history.pop(0)
 
         logger.info(
             f"Online Learning Step applied. PnL Return: {pnl_pct*100:+.2f}%. "
@@ -124,26 +135,31 @@ class MLPredictorStrategy(BaseStrategy):
     def next(self, current_time: int, price: float, history: list[dict]) -> str:
         if len(history) < self.train_window + self.lookback + 2:
             return "HOLD"
-
+ 
         if not self.model.trained or self.ticks_since_train >= 10:
             self.model.train(history[:-1])
             self.ticks_since_train = 0
         else:
             self.ticks_since_train += 1
-
+ 
         pred = self.model.predict(history)
         if pred is None:
             return "HOLD"
+ 
+        import datetime as dt
+        time_str = dt.datetime.fromtimestamp(current_time, tz=dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+        sentiment = getattr(self, "latest_sentiment", 0.0)
+        signal = "HOLD"
+        reason = f"ML Predictor probability is {pred*100:.1f}%. (Sentiment: {sentiment:+.2f})"
 
         # BUY trigger: probability > 55%
         if pred > 0.55:
             # Vet with news sentiment if available
-            sentiment = getattr(self, "latest_sentiment", 0.0)
             if sentiment < -0.25:
+                signal = "HOLD"
+                reason = f"ML Predictor BUY signal vetoed due to negative news sentiment ({sentiment:+.2f} < -0.25)"
                 logger.info(f"[{self.name}] BUY signal vetoed due to negative news sentiment: {sentiment:.2f}")
-                return "HOLD"
-
-            if not self.position_open:
+            elif not self.position_open:
                 # Capture feature values at entry point
                 closes = [float(c["close"]) for c in history[-(self.lookback + 1) :]]
                 returns = []
@@ -153,12 +169,31 @@ class MLPredictorStrategy(BaseStrategy):
                 self.last_buy_features = returns
                 
                 self.position_open = True
-                return "BUY"
+                signal = "BUY"
+                reason = f"ML Predictor BUY triggered with probability {pred*100:.1f}% (Sentiment: {sentiment:+.2f})"
+            else:
+                signal = "HOLD"
+                reason = f"ML Predictor BUY signal generated but position is already open"
                 
         # SELL trigger: probability < 45%
         elif pred < 0.45:
             if self.position_open:
                 self.position_open = False
-                return "SELL"
+                signal = "SELL"
+                reason = f"ML Predictor SELL triggered with probability {pred*100:.1f}% (Sentiment: {sentiment:+.2f})"
+            else:
+                signal = "HOLD"
+                reason = f"ML Predictor SELL signal generated but no active position to close"
 
-        return "HOLD"
+        self.decision_memory.append({
+            "timestamp": time_str,
+            "price": price,
+            "signal": signal,
+            "probability": pred,
+            "sentiment": sentiment,
+            "reason": reason
+        })
+        if len(self.decision_memory) > 100:
+            self.decision_memory.pop(0)
+
+        return signal

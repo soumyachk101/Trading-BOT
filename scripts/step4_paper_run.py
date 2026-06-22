@@ -55,7 +55,10 @@ def main() -> int:
     # 4. Start Dashboard Server
     dashboard_port = 8080
     dashboard_thread = dashboard.start_dashboard(
-        engine, get_latest_prices, port=dashboard_port
+        engine,
+        get_latest_prices,
+        strategies={"BTCUSDT": btc_strategy, "AAPL": aapl_strategy},
+        port=dashboard_port
     )
 
     print("\nBot is now running in PAPER mode.")

@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 class BaseStrategy(ABC):
     def __init__(self, name: str):
         self.name = name
+        self.decision_memory: list[dict] = []
 
     @abstractmethod
     def next(self, current_time: int, price: float, history: list[dict]) -> str:
