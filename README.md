@@ -15,7 +15,7 @@ Steps:
 
 ## The honesty contract
 
-Before any fill is recorded, the engine must have:
+Before any fill is recorded, the engine must have::
 
 1. A live price fetched from an official public REST endpoint at a logged timestamp.
 2. The venue's official fee schedule for the user's tier (default VIP0), recorded as a number not a guess.
